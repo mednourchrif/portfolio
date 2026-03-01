@@ -50,7 +50,7 @@ export default function AdminLogin({ onLogin }) {
         className="glass rounded-2xl p-8 w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-violet)] flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[var(--color-blue-400)] to-[var(--color-blue-900)] flex items-center justify-center mx-auto mb-4">
             <FiLock className="text-white" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
@@ -80,7 +80,7 @@ export default function AdminLogin({ onLogin }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-violet)] text-white font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-900)] text-white font-medium text-sm hover:shadow-[0_0_20px_rgba(79,107,255,0.25)] transition-all disabled:opacity-50"
           >
             {loading ? '...' : t('admin.login_btn')}
           </button>

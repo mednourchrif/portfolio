@@ -6,11 +6,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--color-border)] bg-[var(--color-bg)]/80">
+    <footer className="border-t border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-violet)] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-blue-400)] to-[var(--color-blue-900)] flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-[var(--color-accent-glow)]">
               M
             </div>
             <div>

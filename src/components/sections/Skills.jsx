@@ -72,7 +72,7 @@ export default function Skills() {
   return (
     <SectionWrapper id="skills">
       <div className="text-center mb-16">
-        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-widest">
+        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-[0.2em]">
           ./skills
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
@@ -86,17 +86,26 @@ export default function Skills() {
       {/* Category tabs */}
       <div className="flex flex-wrap justify-center gap-2 mb-12">
         {categories.map((cat) => (
-          <button
+          <motion.button
             key={cat.key}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setActiveCategory(cat.key)}
-            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+            className={`relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
               activeCategory === cat.key
-                ? 'bg-[var(--color-accent)] text-white glow-accent'
-                : 'glass text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent)]/30'
+                ? 'text-white'
+                : 'glass text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
             }`}
           >
-            {t(`skills.${cat.key}`)}
-          </button>
+            {activeCategory === cat.key && (
+              <motion.div
+                layoutId="activeSkillTab"
+                className="absolute inset-0 bg-gradient-to-r from-[var(--color-blue-600)] to-[var(--color-blue-900)] rounded-xl"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+              />
+            )}
+            <span className="relative z-10">{t(`skills.${cat.key}`)}</span>
+          </motion.button>
         ))}
       </div>
 
@@ -104,25 +113,31 @@ export default function Skills() {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeCategory}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
+          transition={{ duration: 0.35 }}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-4xl mx-auto"
         >
           {activeSkills.map((skill, i) => (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.06 }}
-              className="glass rounded-2xl p-6 flex flex-col items-center gap-3 group hover:border-[var(--color-accent)]/30 transition-all cursor-default"
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.4, ease: [0.215, 0.61, 0.355, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="glass-card rounded-2xl p-6 flex flex-col items-center gap-3 group cursor-default"
             >
-              <skill.icon
-                size={32}
-                style={{ color: skill.color }}
-                className="opacity-70 group-hover:opacity-100 transition-opacity"
-              />
+              <motion.div
+                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
+                transition={{ duration: 0.4 }}
+              >
+                <skill.icon
+                  size={32}
+                  style={{ color: skill.color }}
+                  className="opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-lg"
+                />
+              </motion.div>
               <span className="text-[var(--color-text-secondary)] text-sm font-medium group-hover:text-[var(--color-text-primary)] transition-colors text-center">
                 {skill.name}
               </span>

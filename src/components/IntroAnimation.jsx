@@ -25,31 +25,36 @@ function TerminalLine({ text, accent, index }) {
         clearInterval(interval);
         setDone(true);
       }
-    }, 25);
+    }, 20);
     return () => clearInterval(interval);
   }, [text]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -10 }}
+      initial={{ opacity: 0, x: -15 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
       className="flex items-center gap-2"
     >
       <span
         className={`font-mono text-sm md:text-base ${
-          accent ? 'text-[var(--color-accent-light)]' : 'text-[var(--color-text-secondary)]'
+          accent ? 'text-[var(--color-blue-100)]' : 'text-[var(--color-text-secondary)]'
         }`}
       >
         {displayed}
         {!done && (
-          <span className="inline-block w-2 h-4 ml-0.5 bg-[var(--color-accent)] animate-pulse" />
+          <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 0.5, repeat: Infinity }}
+            className="inline-block w-2 h-4 ml-0.5 bg-[var(--color-accent)]"
+          />
         )}
       </span>
       {done && accent && (
         <motion.span
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 15 }}
           className="inline-block w-2 h-2 rounded-full bg-[var(--color-success)]"
         />
       )}
@@ -57,9 +62,24 @@ function TerminalLine({ text, accent, index }) {
   );
 }
 
+/* Progress bar that fills during boot */
+function ProgressBar({ progress }) {
+  return (
+    <div className="mt-6 h-0.5 w-full bg-[var(--color-border)] rounded-full overflow-hidden">
+      <motion.div
+        initial={{ width: '0%' }}
+        animate={{ width: `${progress}%` }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="h-full bg-gradient-to-r from-[var(--color-blue-600)] to-[var(--color-blue-100)] rounded-full"
+      />
+    </div>
+  );
+}
+
 export default function IntroAnimation({ onComplete }) {
   const [visibleLines, setVisibleLines] = useState([]);
-  const [phase, setPhase] = useState('boot'); // boot | fadeout | done
+  const [phase, setPhase] = useState('boot');
+  const [progress, setProgress] = useState(0);
 
   const skipIntro = useCallback(() => {
     setPhase('fadeout');
@@ -70,20 +90,18 @@ export default function IntroAnimation({ onComplete }) {
   }, [onComplete]);
 
   useEffect(() => {
-    // Check if already seen
     if (localStorage.getItem(STORAGE_KEY)) {
       onComplete();
       return;
     }
 
-    // Show lines one by one
     BOOT_LINES.forEach((line, idx) => {
       setTimeout(() => {
         setVisibleLines((prev) => [...prev, { ...line, index: idx }]);
+        setProgress(((idx + 1) / BOOT_LINES.length) * 100);
       }, line.delay);
     });
 
-    // Auto transition after last line
     const totalDuration = BOOT_LINES[BOOT_LINES.length - 1].delay + 1500;
     const timer = setTimeout(() => {
       skipIntro();
@@ -106,14 +124,29 @@ export default function IntroAnimation({ onComplete }) {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--color-bg)]"
           onClick={skipIntro}
         >
+          {/* Grid overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.02]"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(79,107,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(79,107,255,0.15) 1px, transparent 1px)',
+              backgroundSize: '60px 60px',
+            }}
+          />
+
           {/* Scanline effect */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-[0.03]"
+            className="absolute inset-0 pointer-events-none opacity-[0.02]"
             style={{
               backgroundImage:
                 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)',
             }}
           />
+
+          {/* Radial glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: 'radial-gradient(ellipse at center, rgba(79,107,255,0.04) 0%, transparent 70%)',
+          }} />
 
           {/* Glitch overlay */}
           <motion.div
@@ -125,7 +158,7 @@ export default function IntroAnimation({ onComplete }) {
             transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
             style={{
               background:
-                'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.05) 50%, transparent 100%)',
+                'linear-gradient(90deg, transparent 0%, rgba(79,107,255,0.05) 50%, transparent 100%)',
             }}
           />
 
@@ -152,12 +185,15 @@ export default function IntroAnimation({ onComplete }) {
               ))}
             </div>
 
+            {/* Progress bar */}
+            <ProgressBar progress={progress} />
+
             {/* Skip hint */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.3 }}
               transition={{ delay: 1 }}
-              className="text-[var(--color-text-muted)] text-xs font-mono mt-8 text-center"
+              className="text-[var(--color-text-muted)] text-xs font-mono mt-6 text-center"
             >
               click anywhere to skip
             </motion.p>

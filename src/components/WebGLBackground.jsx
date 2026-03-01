@@ -65,40 +65,86 @@ const fragmentShader = `
     return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
   }
 
+  // Fractal brownian motion for richer texture
+  float fbm(vec3 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 5; i++) {
+      value += amplitude * snoise(p * frequency);
+      amplitude *= 0.5;
+      frequency *= 2.0;
+    }
+    return value;
+  }
+
   void main() {
     vec2 uv = vUv;
-    float t = uTime * 0.08;
+    float t = uTime * 0.06;
     
-    // Mouse influence
-    vec2 mouse = uMouse * 0.3;
+    // Mouse influence with smooth parallax
+    vec2 mouse = uMouse * 0.25;
     
-    // Layer 1 - deep blue
-    float n1 = snoise(vec3(uv * 1.5 + mouse * 0.1, t)) * 0.5 + 0.5;
+    // Warp coordinates for organic flow
+    float warp = snoise(vec3(uv * 2.0, t * 0.5)) * 0.08;
+    vec2 warpedUv = uv + vec2(warp, warp * 0.7);
     
-    // Layer 2 - violet 
-    float n2 = snoise(vec3(uv * 2.0 - mouse * 0.15, t * 1.3 + 10.0)) * 0.5 + 0.5;
+    // Layer 1 - deep flowing aurora
+    float n1 = fbm(vec3(warpedUv * 1.2 + mouse * 0.08, t * 0.7)) * 0.5 + 0.5;
     
-    // Layer 3 - subtle detail
-    float n3 = snoise(vec3(uv * 3.5, t * 0.7 + 20.0)) * 0.5 + 0.5;
+    // Layer 2 - mid-frequency ribbons
+    float n2 = snoise(vec3(warpedUv * 2.5 - mouse * 0.12, t * 1.1 + 10.0)) * 0.5 + 0.5;
     
-    // Color palette
-    vec3 deepBg = vec3(0.059, 0.059, 0.075);       // #0f0f13
-    vec3 blue = vec3(0.388, 0.400, 0.945);          // #6366f1
-    vec3 violet = vec3(0.545, 0.361, 0.965);        // #8b5cf6
-    vec3 darkBlue = vec3(0.180, 0.180, 0.280);
+    // Layer 3 - high-frequency detail
+    float n3 = snoise(vec3(uv * 4.0 + mouse * 0.05, t * 0.9 + 20.0)) * 0.5 + 0.5;
     
-    // Mix colors with noise
+    // Layer 4 - slow undulating wave
+    float n4 = snoise(vec3(uv.x * 0.8 + t * 0.15, uv.y * 1.5, t * 0.4)) * 0.5 + 0.5;
+    
+    // Layer 5 - micro particles / dust
+    float n5 = snoise(vec3(uv * 8.0, t * 1.5 + 40.0)) * 0.5 + 0.5;
+    float particles = smoothstep(0.72, 0.78, n5) * 0.15;
+    
+    // New blue color palette
+    vec3 deepBg   = vec3(0.024, 0.024, 0.055);      // #06060e
+    vec3 blue100  = vec3(0.506, 0.769, 1.000);       // #81C4FF
+    vec3 blue400  = vec3(0.388, 0.561, 1.000);       // #638FFF
+    vec3 blue600  = vec3(0.310, 0.420, 1.000);       // #4F6BFF
+    vec3 blue900  = vec3(0.188, 0.208, 1.000);       // #3035FF
+    vec3 blue1200 = vec3(0.071, 0.000, 1.000);       // #1200FF
+    vec3 darkBlue = vec3(0.047, 0.047, 0.157);       // #0c0c28
+    
+    // Mix colors with rich layering
     vec3 color = deepBg;
-    color = mix(color, darkBlue, n1 * 0.35);
-    color = mix(color, blue * 0.15, n2 * 0.25);
-    color = mix(color, violet * 0.1, n3 * 0.15);
+    color = mix(color, darkBlue, n1 * 0.5);
+    color = mix(color, blue900 * 0.12, n2 * 0.35);
+    color = mix(color, blue600 * 0.08, n3 * 0.2);
+    color = mix(color, blue400 * 0.06, n4 * 0.25);
     
-    // Vignette
-    float vignette = 1.0 - length(uv - 0.5) * 0.8;
+    // Aurora-like bright ribbons
+    float aurora = smoothstep(0.55, 0.7, n1) * smoothstep(0.4, 0.6, n2);
+    color += blue100 * aurora * 0.04;
+    color += blue600 * aurora * 0.06;
+    
+    // Bright particle specks
+    color += blue100 * particles;
+    
+    // Radial gradient glow from center
+    float centerGlow = 1.0 - length((uv - 0.5) * vec2(1.6, 1.0)) * 1.4;
+    centerGlow = max(centerGlow, 0.0);
+    color += blue600 * centerGlow * 0.03;
+    
+    // Vignette - deeper at edges
+    float vignette = 1.0 - length(uv - 0.5) * 1.0;
+    vignette = smoothstep(0.0, 0.7, vignette);
     color *= vignette;
     
-    // Keep it subtle
-    color = mix(deepBg, color, 0.7);
+    // Subtle scanline overlay
+    float scanline = sin(uv.y * uResolution.y * 1.5) * 0.5 + 0.5;
+    color *= 0.98 + scanline * 0.02;
+    
+    // Keep overall darkness but with depth
+    color = mix(deepBg, color, 0.8);
     
     gl_FragColor = vec4(color, 1.0);
   }
@@ -151,7 +197,7 @@ function GradientMesh() {
 
 export default function WebGLBackground() {
   return (
-    <div className="fixed inset-0 -z-10">
+    <div className="fixed inset-0 -z-10 noise-overlay">
       <Canvas
         camera={{ position: [0, 0, 1] }}
         gl={{ antialias: false, alpha: false, powerPreference: 'low-power' }}

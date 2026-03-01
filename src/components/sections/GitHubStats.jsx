@@ -115,7 +115,7 @@ export default function GitHubStats() {
   return (
     <SectionWrapper id="github">
       <div className="text-center mb-16">
-        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-widest">
+        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-[0.2em]">
           ./github
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
@@ -131,14 +131,15 @@ export default function GitHubStats() {
         {statCards.map((card, i) => (
           <motion.div
             key={card.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="glass rounded-2xl p-6 text-center"
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="glass-card rounded-2xl p-6 text-center"
           >
-            <card.icon className="mx-auto mb-3 text-[var(--color-accent-light)]" size={24} />
-            <p className="text-3xl font-bold text-[var(--color-text-primary)] mb-1">{card.value}</p>
+            <card.icon className="mx-auto mb-3 text-[var(--color-blue-200)]" size={24} />
+            <p className="text-3xl font-bold text-gradient-accent mb-1">{card.value}</p>
             <p className="text-[var(--color-text-muted)] text-sm">{card.label}</p>
           </motion.div>
         ))}
@@ -150,10 +151,10 @@ export default function GitHubStats() {
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="glass rounded-2xl p-6"
+          className="glass-card rounded-2xl p-6"
         >
           <h3 className="text-[var(--color-text-primary)] font-semibold mb-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[var(--color-accent)]" />
+            <span className="w-2 h-2 rounded-full bg-[var(--color-blue-500)]" />
             {t('github.top_languages')}
           </h3>
           <div className="space-y-4">
@@ -185,10 +186,10 @@ export default function GitHubStats() {
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="glass rounded-2xl p-6"
+          className="glass-card rounded-2xl p-6"
         >
           <h3 className="text-[var(--color-text-primary)] font-semibold mb-6 flex items-center gap-2">
-            <FiActivity className="text-[var(--color-accent-light)]" size={16} />
+            <FiActivity className="text-[var(--color-blue-200)]" size={16} />
             {t('github.recent_activity')}
           </h3>
           <div className="space-y-4">

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import SectionWrapper from '../SectionWrapper';
-import { FiGithub, FiExternalLink, FiLock, FiStar } from 'react-icons/fi';
+import { FiGithub, FiExternalLink, FiLock, FiStar, FiArrowUpRight } from 'react-icons/fi';
 
 const projectsData = [
   {
@@ -68,7 +68,7 @@ export default function Projects() {
   return (
     <SectionWrapper id="projects">
       <div className="text-center mb-16">
-        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-widest">
+        <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-[0.2em]">
           ./projects
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
@@ -82,17 +82,26 @@ export default function Projects() {
       {/* Filters */}
       <div className="flex justify-center gap-2 mb-12">
         {filters.map((f) => (
-          <button
+          <motion.button
             key={f}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setActiveFilter(f)}
-            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+            className={`relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
               activeFilter === f
-                ? 'bg-[var(--color-accent)] text-white glow-accent'
+                ? 'text-white'
                 : 'glass text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
             }`}
           >
-            {t(`projects.filter_${f}`)}
-          </button>
+            {activeFilter === f && (
+              <motion.div
+                layoutId="activeProjectFilter"
+                className="absolute inset-0 bg-gradient-to-r from-[var(--color-blue-600)] to-[var(--color-blue-900)] rounded-xl"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+              />
+            )}
+            <span className="relative z-10">{t(`projects.filter_${f}`)}</span>
+          </motion.button>
         ))}
       </div>
 
@@ -109,10 +118,11 @@ export default function Projects() {
           {filtered.map((project, i) => (
             <motion.div
               key={project.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}
-              className="glass rounded-2xl overflow-hidden group hover:border-[var(--color-accent)]/30 transition-all"
+              initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
+              whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              className="glass-card rounded-2xl overflow-hidden group"
             >
               {/* Project image or gradient fallback */}
               <div className="h-48 bg-gradient-to-br from-[var(--color-bg-tertiary)] to-[var(--color-surface)] flex items-center justify-center relative overflow-hidden">
@@ -120,28 +130,39 @@ export default function Projects() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)]/5 to-[var(--color-violet)]/5 group-hover:from-[var(--color-accent)]/10 group-hover:to-[var(--color-violet)]/10 transition-all duration-500" />
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-blue-600)]/5 to-[var(--color-blue-1000)]/5 group-hover:from-[var(--color-blue-600)]/12 group-hover:to-[var(--color-blue-1000)]/12 transition-all duration-500" />
+                    {/* Animated grid pattern */}
+                    <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" style={{
+                      backgroundImage: 'linear-gradient(rgba(79,107,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(79,107,255,0.4) 1px, transparent 1px)',
+                      backgroundSize: '25px 25px',
+                    }} />
+                  </>
                 )}
                 {!project.image && (
-                  <span className="text-[var(--color-text-muted)] font-mono text-sm z-10">
+                  <span className="text-[var(--color-text-muted)] font-mono text-sm z-10 tracking-widest">
                     {project.category.toUpperCase()}
                   </span>
                 )}
                 {project.featured && (
-                  <span className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-[var(--color-accent)] text-white rounded-lg shadow-lg">
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-800)] text-white rounded-lg shadow-lg shadow-[var(--color-accent-glow)]"
+                  >
                     <FiStar size={11} /> Featured
-                  </span>
+                  </motion.span>
                 )}
                 {project.image && (
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/20 to-transparent" />
                 )}
               </div>
 
               <div className="p-6">
-                <h3 className="text-[var(--color-text-primary)] font-semibold text-lg mb-2">
+                <h3 className="text-[var(--color-text-primary)] font-semibold text-lg mb-2 group-hover:text-gradient-accent transition-all">
                   {project.title}
                 </h3>
                 <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-4">
@@ -153,7 +174,7 @@ export default function Projects() {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 text-xs font-mono text-[var(--color-accent-light)] bg-[var(--color-accent-glow)] rounded-md"
+                      className="px-2.5 py-1 text-xs font-mono text-[var(--color-blue-200)] bg-[var(--color-accent-glow)] rounded-md border border-[var(--color-border)]"
                     >
                       {tag}
                     </span>
@@ -163,15 +184,17 @@ export default function Projects() {
                 {/* Links */}
                 <div className="flex items-center gap-4">
                   {project.github ? (
-                    <a
+                    <motion.a
+                      whileHover={{ x: 3 }}
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] text-sm transition-colors"
+                      className="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-accent-light)] text-sm transition-colors"
                     >
                       <FiGithub size={15} />
                       {t('projects.view_code')}
-                    </a>
+                      <FiArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </motion.a>
                   ) : (
                     <span className="flex items-center gap-1.5 text-[var(--color-text-muted)] text-sm">
                       <FiLock size={14} />
@@ -179,15 +202,16 @@ export default function Projects() {
                     </span>
                   )}
                   {project.demo && (
-                    <a
+                    <motion.a
+                      whileHover={{ x: 3 }}
                       href={project.demo}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-accent)] text-sm transition-colors"
+                      className="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-accent-light)] text-sm transition-colors"
                     >
                       <FiExternalLink size={15} />
                       {t('projects.live_demo')}
-                    </a>
+                    </motion.a>
                   )}
                 </div>
               </div>

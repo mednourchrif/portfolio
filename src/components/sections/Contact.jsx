@@ -50,7 +50,7 @@ export default function Contact() {
     <SectionWrapper id="contact">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-widest">
+          <p className="text-[var(--color-accent)] font-mono text-sm mb-3 uppercase tracking-[0.2em]">
             ./contact
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-4">
@@ -66,7 +66,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           onSubmit={handleSubmit}
-          className="glass rounded-2xl p-8 space-y-6"
+          className="glass-card rounded-2xl p-8 space-y-6"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
@@ -122,7 +122,7 @@ export default function Contact() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-violet)] text-white font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-900)] text-white font-medium text-sm hover:shadow-[0_0_30px_rgba(79,107,255,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {status === 'sending' ? (
               <>

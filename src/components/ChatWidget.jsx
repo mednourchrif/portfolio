@@ -129,7 +129,7 @@ export default function ChatWidget() {
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
           open
             ? 'bg-[var(--color-bg-tertiary)] border border-[var(--color-border)]'
-            : 'bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-violet)] glow-accent'
+            : 'bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-900)] glow-accent'
         }`}
       >
         {open ? (
@@ -151,7 +151,7 @@ export default function ChatWidget() {
           >
             {/* Header */}
             <div className="px-5 py-4 border-b border-[var(--color-border)] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-violet)] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-blue-400)] to-[var(--color-blue-800)] flex items-center justify-center">
                 <span className="text-white text-xs font-bold">AI</span>
               </div>
               <div>
@@ -215,7 +215,7 @@ export default function ChatWidget() {
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isTyping}
-                  className="w-10 h-10 rounded-xl bg-[var(--color-accent)] text-white flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-800)] text-white flex items-center justify-center hover:shadow-[0_0_15px_rgba(79,107,255,0.2)] transition-all disabled:opacity-30"
                 >
                   <FiSend size={16} />
                 </button>
