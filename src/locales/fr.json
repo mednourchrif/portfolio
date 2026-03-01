@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "about": "À propos",
+    "skills": "Compétences",
+    "projects": "Projets",
+    "github": "GitHub",
+    "contact": "Contact"
+  },
+  "hero": {
+    "headline": "Construire des Systèmes Numériques Intelligents",
+    "subheadline": "Développeur full-stack spécialisé dans les applications web et mobiles propulsées par l'IA.",
+    "cta_projects": "Voir les Projets",
+    "cta_contact": "Me Contacter"
+  },
+  "about": {
+    "title": "À Propos de Moi",
+    "p1": "Je suis Mohamed Nour Cherif, un développeur full-stack qui conçoit des systèmes intelligents à l'intersection du web, du mobile et de l'intelligence artificielle.",
+    "p2": "Je me spécialise dans la création d'applications haute performance qui exploitent les frameworks modernes, l'infrastructure cloud et les capacités de l'IA pour résoudre des problèmes concrets.",
+    "p3": "Avec une passion profonde pour l'architecture propre et le design réfléchi, je crée des expériences numériques à la fois techniquement excellentes et visuellement raffinées.",
+    "p4": "Je suis toujours en train d'explorer de nouvelles technologies et de repousser les limites du possible avec le code."
+  },
+  "skills": {
+    "title": "Compétences & Expertise",
+    "subtitle": "Les technologies que j'utilise pour créer des applications modernes et intelligentes.",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "mobile": "Mobile",
+    "ai": "IA & ML",
+    "tools": "Outils & DevOps"
+  },
+  "projects": {
+    "title": "Projets Sélectionnés",
+    "subtitle": "Une collection de projets démontrant ma polyvalence technique.",
+    "filter_all": "Tous",
+    "filter_fullstack": "Full-Stack",
+    "filter_backend": "Backend",
+    "filter_frontend": "Frontend",
+    "view_code": "Code Source",
+    "live_demo": "Démo Live",
+    "private_repo": "Repo Privé"
+  },
+  "github": {
+    "title": "Activité GitHub",
+    "subtitle": "Statistiques en direct depuis mon profil GitHub.",
+    "repos": "Repos Publics",
+    "stars": "Étoiles",
+    "followers": "Abonnés",
+    "contributions": "Cette Année",
+    "recent_activity": "Activité Récente",
+    "top_languages": "Langages Principaux"
+  },
+  "contact": {
+    "title": "Me Contacter",
+    "subtitle": "Un projet en tête ou envie de collaborer ? Envoyez-moi un message.",
+    "name": "Votre Nom",
+    "email": "Votre Email",
+    "message": "Votre Message",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "success": "Message envoyé avec succès ! Je vous répondrai bientôt.",
+    "error": "Une erreur s'est produite. Veuillez réessayer."
+  },
+  "chat": {
+    "title": "Assistant IA",
+    "placeholder": "Posez une question sur Mohamed...",
+    "greeting": "Bonjour ! Je suis l'assistant IA de Mohamed. Posez-moi des questions sur ses compétences, son expérience ou ses projets.",
+    "thinking": "Réflexion..."
+  },
+  "admin": {
+    "title": "Tableau de Bord",
+    "visitors": "Visiteurs Totaux",
+    "unique": "Visiteurs Uniques",
+    "messages": "Messages",
+    "chats": "Sessions Chat",
+    "analytics": "Analytique Visiteurs",
+    "messages_title": "Messages de Contact",
+    "chat_logs": "Journaux du Chatbot",
+    "export": "Exporter JSON",
+    "login": "Connexion Admin",
+    "password": "Mot de passe",
+    "login_btn": "Se Connecter",
+    "logout": "Déconnexion"
+  },
+  "footer": {
+    "built": "Construit avec précision par",
+    "rights": "Tous droits réservés."
+  }
+}

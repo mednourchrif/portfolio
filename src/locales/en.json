@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "github": "GitHub",
+    "contact": "Contact"
+  },
+  "hero": {
+    "headline": "Building Intelligent Digital Systems",
+    "subheadline": "Full-stack developer focused on AI-powered web and mobile applications.",
+    "cta_projects": "View Projects",
+    "cta_contact": "Contact Me"
+  },
+  "about": {
+    "title": "About Me",
+    "p1": "I'm Mohamed Nour Cherif, a full-stack developer who builds intelligent systems at the intersection of web, mobile, and artificial intelligence.",
+    "p2": "I specialize in creating high-performance applications that leverage modern frameworks, cloud infrastructure, and AI capabilities to solve real-world problems.",
+    "p3": "With a deep passion for clean architecture and thoughtful design, I craft digital experiences that are both technically excellent and visually refined.",
+    "p4": "I'm always exploring new technologies and pushing the boundaries of what's possible with code."
+  },
+  "skills": {
+    "title": "Skills & Expertise",
+    "subtitle": "Technologies I work with to build modern, intelligent applications.",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "mobile": "Mobile",
+    "ai": "AI & ML",
+    "tools": "Tools & DevOps"
+  },
+  "projects": {
+    "title": "Selected Projects",
+    "subtitle": "A curated collection of projects showcasing my technical range.",
+    "filter_all": "All",
+    "filter_fullstack": "Full-Stack",
+    "filter_backend": "Backend",
+    "filter_frontend": "Frontend",
+    "view_code": "Source Code",
+    "live_demo": "Live Demo",
+    "private_repo": "Private Repo"
+  },
+  "github": {
+    "title": "GitHub Activity",
+    "subtitle": "Live stats pulled directly from my GitHub profile.",
+    "repos": "Public Repos",
+    "stars": "Total Stars",
+    "followers": "Followers",
+    "contributions": "This Year",
+    "recent_activity": "Recent Activity",
+    "top_languages": "Top Languages"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have a project in mind or want to collaborate? Send me a message.",
+    "name": "Your Name",
+    "email": "Your Email",
+    "message": "Your Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully! I'll get back to you soon.",
+    "error": "Something went wrong. Please try again."
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "placeholder": "Ask about Mohamed's experience...",
+    "greeting": "Hi! I'm Mohamed's AI assistant. Ask me anything about his skills, experience, or projects.",
+    "thinking": "Thinking..."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "visitors": "Total Visitors",
+    "unique": "Unique Visitors",
+    "messages": "Messages",
+    "chats": "Chat Sessions",
+    "analytics": "Visitor Analytics",
+    "messages_title": "Contact Messages",
+    "chat_logs": "Chatbot Logs",
+    "export": "Export JSON",
+    "login": "Admin Login",
+    "password": "Password",
+    "login_btn": "Log In",
+    "logout": "Log Out"
+  },
+  "footer": {
+    "built": "Built with precision by",
+    "rights": "All rights reserved."
+  }
+}
