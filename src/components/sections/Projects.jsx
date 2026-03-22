@@ -118,10 +118,10 @@ export default function Projects() {
           {filtered.map((project, i) => (
             <motion.div
               key={project.title}
-              initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
-              whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.35, ease: [0.215, 0.61, 0.355, 1] }}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
               className="glass-card rounded-2xl overflow-hidden group"
             >
               {/* Project image or gradient fallback */}
@@ -130,7 +130,9 @@ export default function Projects() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
                   />
                 ) : (
                   <>

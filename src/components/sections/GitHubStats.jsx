@@ -131,11 +131,11 @@ export default function GitHubStats() {
         {statCards.map((card, i) => (
           <motion.div
             key={card.label}
-            initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            transition={{ delay: i * 0.06, duration: 0.35 }}
+            whileHover={{ y: -2, transition: { duration: 0.15 } }}
             className="glass-card rounded-2xl p-6 text-center"
           >
             <card.icon className="mx-auto mb-3 text-[var(--color-blue-200)]" size={24} />

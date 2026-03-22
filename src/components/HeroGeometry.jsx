@@ -4,7 +4,7 @@ import { Float, MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 /* ── Orbiting particle ring ── */
-function ParticleRing({ count = 120 }) {
+function ParticleRing({ count = 72 }) {
   const ref = useRef();
 
   const positions = useMemo(() => {
@@ -102,13 +102,13 @@ function GlassIcosahedron() {
         <icosahedronGeometry args={[1, 1]} />
         <MeshTransmissionMaterial
           backside
-          samples={6}
+          samples={4}
           thickness={0.6}
-          chromaticAberration={0.25}
+          chromaticAberration={0.14}
           anisotropy={0.4}
-          distortion={0.3}
-          distortionScale={0.4}
-          temporalDistortion={0.15}
+          distortion={0.2}
+          distortionScale={0.28}
+          temporalDistortion={0.08}
           iridescence={1}
           iridescenceIOR={1}
           iridescenceThicknessRange={[0, 1400]}
@@ -162,8 +162,8 @@ export default function HeroGeometry() {
     <div className="w-full h-full min-h-[400px]">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
-        dpr={[1, 2]}
+        gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
+        dpr={[1, 1.35]}
         style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.2} />

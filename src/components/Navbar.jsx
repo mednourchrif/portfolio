@@ -114,6 +114,8 @@ export default function Navbar() {
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileOpen}
           className="md:hidden text-[var(--color-text-primary)] p-2"
         >
           {mobileOpen ? <HiX size={24} /> : <HiMenu size={24} />}

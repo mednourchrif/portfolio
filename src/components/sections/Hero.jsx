@@ -1,38 +1,9 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiArrowDown, FiMail } from 'react-icons/fi';
-import HeroGeometry from '../HeroGeometry';
 
-const letterVariants = {
-  hidden: { opacity: 0, y: 40, rotateX: -90 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: { duration: 0.5, delay: 0.6 + i * 0.04, ease: [0.215, 0.61, 0.355, 1] },
-  }),
-};
-
-function AnimatedText({ text, className }) {
-  return (
-    <span className={className} aria-label={text}>
-      {text.split('').map((char, i) => (
-        <motion.span
-          key={i}
-          custom={i}
-          variants={letterVariants}
-          initial="hidden"
-          animate="visible"
-          className="inline-block"
-          style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
+const HeroGeometry = lazy(() => import('../HeroGeometry'));
 
 export default function Hero() {
   const { t } = useTranslation();
@@ -51,9 +22,9 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <motion.div
-            initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.45, delay: 0.3 }}
             className="flex items-center gap-3 mb-6"
           >
             <span className="relative flex h-2.5 w-2.5">
@@ -65,14 +36,19 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            <AnimatedText text={t('hero.headline')} className="text-gradient" />
-          </h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.45 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-gradient"
+          >
+            {t('hero.headline')}
+          </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, delay: 1.2 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
             className="text-[var(--color-text-secondary)] text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
           >
             {t('hero.subheadline')}
@@ -81,7 +57,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.5 }}
+            transition={{ duration: 0.5, delay: 0.75 }}
             className="flex flex-wrap gap-4"
           >
             <motion.button
@@ -109,9 +85,9 @@ export default function Hero() {
 
         {/* 3D Element */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)' }}
-          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 1.2, delay: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.35, ease: [0.215, 0.61, 0.355, 1] }}
           className="hidden lg:block"
         >
           <Suspense

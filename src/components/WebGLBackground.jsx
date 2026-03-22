@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -70,7 +70,7 @@ const fragmentShader = `
     float value = 0.0;
     float amplitude = 0.5;
     float frequency = 1.0;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
       value += amplitude * snoise(p * frequency);
       amplitude *= 0.5;
       frequency *= 2.0;
@@ -196,12 +196,36 @@ function GradientMesh() {
 }
 
 export default function WebGLBackground() {
+  const [webglEnabled, setWebglEnabled] = useState(true);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    const lowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+    const lowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+
+    if (prefersReducedMotion || lowMemory || lowCpu) {
+      setWebglEnabled(false);
+    }
+  }, []);
+
+  if (!webglEnabled) {
+    return (
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background:
+            'radial-gradient(1200px 600px at 20% 20%, rgba(79,107,255,0.12), transparent 60%), radial-gradient(900px 500px at 80% 10%, rgba(58,71,255,0.1), transparent 65%), linear-gradient(180deg, #06060e 0%, #0c0c1a 100%)',
+        }}
+      />
+    );
+  }
+
   return (
     <div className="fixed inset-0 -z-10 noise-overlay">
       <Canvas
         camera={{ position: [0, 0, 1] }}
         gl={{ antialias: false, alpha: false, powerPreference: 'low-power' }}
-        dpr={[1, 1.5]}
+        dpr={[1, 1.2]}
         style={{ position: 'absolute', inset: 0 }}
       >
         <GradientMesh />

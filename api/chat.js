@@ -52,8 +52,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Messages required' });
     }
 
+    const sanitizedMessages = messages
+      .filter((m) => m && typeof m.content === 'string')
+      .map((m) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content.trim().slice(0, 4000),
+      }))
+      .filter((m) => m.content.length > 0);
+
+    if (sanitizedMessages.length === 0) {
+      return res.status(400).json({ error: 'No valid messages provided' });
+    }
+
     // Limit context window
-    const recentMessages = messages.slice(-10);
+    const recentMessages = sanitizedMessages.slice(-10);
 
     const provider = getAIProvider();
     if (!provider) {

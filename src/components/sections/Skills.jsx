@@ -113,10 +113,10 @@ export default function Skills() {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeCategory}
-          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
-          transition={{ duration: 0.35 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.25 }}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-4xl mx-auto"
         >
           {activeSkills.map((skill, i) => (
@@ -124,14 +124,11 @@ export default function Skills() {
               key={skill.name}
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: i * 0.05, duration: 0.4, ease: [0.215, 0.61, 0.355, 1] }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              transition={{ delay: i * 0.03, duration: 0.25, ease: [0.215, 0.61, 0.355, 1] }}
+              whileHover={{ y: -2, transition: { duration: 0.15 } }}
               className="glass-card rounded-2xl p-6 flex flex-col items-center gap-3 group cursor-default"
             >
-              <motion.div
-                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
-                transition={{ duration: 0.4 }}
-              >
+              <motion.div whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }}>
                 <skill.icon
                   size={32}
                   style={{ color: skill.color }}

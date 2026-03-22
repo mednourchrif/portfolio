@@ -1,15 +1,18 @@
 import { useState, Suspense, lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import IntroAnimation from './components/IntroAnimation';
-import WebGLBackground from './components/WebGLBackground';
 import Home from './pages/Home';
 
 const Admin = lazy(() => import('./pages/Admin'));
+const WebGLBackground = lazy(() => import('./components/WebGLBackground'));
 
 function VisitorTracker() {
   useEffect(() => {
     const track = async () => {
+      if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_LOCAL_TRACKING !== 'true') {
+        return;
+      }
+
       try {
         await fetch('/api/track', {
           method: 'POST',
@@ -39,9 +42,10 @@ export default function App() {
 
   return (
     <>
-      <WebGLBackground />
+      <Suspense fallback={<div className="fixed inset-0 -z-10 bg-[var(--color-bg)]" />}>
+        <WebGLBackground />
+      </Suspense>
       <VisitorTracker />
-      <SpeedInsights />
 
       {!introComplete && (
         <IntroAnimation onComplete={() => setIntroComplete(true)} />

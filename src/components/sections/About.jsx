@@ -20,11 +20,11 @@ export default function About() {
           {highlights.map((item, i) => (
             <motion.div
               key={item.label}
-              initial={{ opacity: 0, x: -40, filter: 'blur(8px)' }}
-              whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15, duration: 0.6, ease: [0.215, 0.61, 0.355, 1] }}
-              whileHover={{ x: 8, transition: { duration: 0.2 } }}
+              transition={{ delay: i * 0.08, duration: 0.45, ease: [0.215, 0.61, 0.355, 1] }}
+              whileHover={{ y: -2, transition: { duration: 0.15 } }}
               className="glass-card rounded-2xl p-6 flex items-center gap-5 group cursor-default"
             >
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center shrink-0 shadow-lg group-hover:shadow-[var(--color-accent-glow)] transition-shadow`}>

@@ -22,10 +22,10 @@ export default function SectionWrapper({ id, children, className = '' }) {
         className="max-w-7xl mx-auto px-6"
       >
         <motion.div
-          initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
+          transition={{ duration: 0.55, ease: [0.215, 0.61, 0.355, 1] }}
         >
           {children}
         </motion.div>
