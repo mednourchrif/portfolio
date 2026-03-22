@@ -3,6 +3,17 @@ import { connectToDatabase } from './_lib/mongodb.js';
 
 const limiter = rateLimit({ windowMs: 60000, max: 10 });
 
+function getAIProvider() {
+  const explicitProvider = (process.env.AI_PROVIDER || '').toLowerCase().trim();
+  if (explicitProvider) return explicitProvider;
+
+  if (process.env.LLAMA_API_KEY) return 'llama';
+  if (process.env.ANTHROPIC_API_KEY) return 'anthropic';
+  if (process.env.OPENAI_API_KEY) return 'openai';
+
+  return null;
+}
+
 const SYSTEM_PROMPT = `You are the AI assistant for Mohamed Nour Cherif's portfolio website. You speak in first person about Mohamed as if you are his representative.
 
 About Mohamed:
@@ -44,8 +55,8 @@ export default async function handler(req, res) {
     // Limit context window
     const recentMessages = messages.slice(-10);
 
-    const apiKey = process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
+    const provider = getAIProvider();
+    if (!provider) {
       return res.status(500).json({ error: 'AI service not configured' });
     }
 
@@ -61,10 +72,7 @@ export default async function handler(req, res) {
       // Don't fail if DB logging fails
     }
 
-    // Determine which API to use
-    const useAnthropic = !!process.env.ANTHROPIC_API_KEY;
-
-    if (useAnthropic) {
+    if (provider === 'anthropic') {
       // Claude API
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -84,6 +92,11 @@ export default async function handler(req, res) {
           })),
         }),
       });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Anthropic API error: ${text}`);
+      }
 
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
@@ -115,16 +128,33 @@ export default async function handler(req, res) {
 
       res.write('data: [DONE]\n\n');
       return res.end();
-    } else {
-      // OpenAI API
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    }
+
+    if (provider === 'llama') {
+      if (!process.env.LLAMA_API_KEY) {
+        return res.status(500).json({ error: 'LLAMA_API_KEY is missing' });
+      }
+
+      const llamaBaseUrl = (process.env.LLAMA_BASE_URL || 'https://openrouter.ai/api/v1').replace(/\/$/, '');
+      const llamaModel = process.env.LLAMA_MODEL || 'meta-llama/llama-3.1-8b-instruct';
+
+      const extraHeaders =
+        llamaBaseUrl.includes('openrouter.ai')
+          ? {
+              'HTTP-Referer': process.env.SITE_URL || 'http://localhost:5173',
+              'X-Title': 'Mohamed Portfolio AI',
+            }
+          : {};
+
+      const response = await fetch(`${llamaBaseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          Authorization: `Bearer ${process.env.LLAMA_API_KEY}`,
           'Content-Type': 'application/json',
+          ...extraHeaders,
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: llamaModel,
           stream: true,
           max_tokens: 500,
           messages: [
@@ -133,6 +163,11 @@ export default async function handler(req, res) {
           ],
         }),
       });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Llama API error: ${text}`);
+      }
 
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
@@ -170,6 +205,73 @@ export default async function handler(req, res) {
 
       return res.end();
     }
+
+    if (provider === 'openai') {
+      // OpenAI API
+      if (!process.env.OPENAI_API_KEY) {
+        return res.status(500).json({ error: 'OPENAI_API_KEY is missing' });
+      }
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          stream: true,
+          max_tokens: 500,
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            ...recentMessages,
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`OpenAI API error: ${text}`);
+      }
+
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') {
+              res.write('data: [DONE]\n\n');
+              break;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              const token = parsed.choices?.[0]?.delta?.content;
+              if (token) {
+                res.write(`data: ${JSON.stringify({ token })}\n\n`);
+              }
+            } catch {
+              // skip
+            }
+          }
+        }
+      }
+
+      return res.end();
+    }
+
+    return res.status(500).json({ error: `Unsupported AI_PROVIDER: ${provider}` });
   } catch (err) {
     console.error('chat error:', err);
     return res.status(500).json({ error: 'Internal server error' });
