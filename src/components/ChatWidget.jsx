@@ -9,6 +9,8 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [lastFailedMessage, setLastFailedMessage] = useState('');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -31,27 +33,49 @@ export default function ChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isTyping) return;
+  useEffect(() => {
+    const onEscape = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, []);
 
-    const userMsg = { role: 'user', content: input.trim() };
+  const sendMessage = async (overrideText = null) => {
+    const messageText = (overrideText ?? input).trim();
+    if (!messageText || isTyping) return;
+
+    const userMsg = { role: 'user', content: messageText };
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
+    setErrorMessage('');
+    setLastFailedMessage('');
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMsg].map((m) => ({
+          messages: [...messages, userMsg].slice(-12).map((m) => ({
             role: m.role,
             content: m.content,
           })),
         }),
+        signal: controller.signal,
       });
 
-      if (!res.ok) throw new Error('Chat failed');
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Chat failed');
+      }
+
+      if (!res.body) throw new Error('No response stream available');
 
       // Streaming response
       const reader = res.body.getReader();
@@ -99,6 +123,8 @@ export default function ChatWidget() {
         }
       }
     } catch (err) {
+      setErrorMessage('Connection issue. Please retry.');
+      setLastFailedMessage(messageText);
       setMessages((prev) => [
         ...prev,
         {
@@ -126,10 +152,11 @@ export default function ChatWidget() {
         animate={{ scale: 1 }}
         transition={{ delay: 2, type: 'spring' }}
         onClick={() => setOpen(!open)}
+        aria-label={open ? 'Close assistant chat' : 'Open assistant chat'}
         className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
           open
             ? 'bg-[var(--color-bg-tertiary)] border border-[var(--color-border)]'
-            : 'bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-violet)] glow-accent'
+            : 'bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-900)] glow-accent'
         }`}
       >
         {open ? (
@@ -151,7 +178,7 @@ export default function ChatWidget() {
           >
             {/* Header */}
             <div className="px-5 py-4 border-b border-[var(--color-border)] flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-violet)] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-blue-400)] to-[var(--color-blue-800)] flex items-center justify-center">
                 <span className="text-white text-xs font-bold">AI</span>
               </div>
               <div>
@@ -210,16 +237,29 @@ export default function ChatWidget() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={t('chat.placeholder')}
+                  aria-label="Chat message input"
                   className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] text-[var(--color-text-primary)] text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors placeholder:text-[var(--color-text-muted)]"
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isTyping}
-                  className="w-10 h-10 rounded-xl bg-[var(--color-accent)] text-white flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-30"
+                  aria-label="Send message"
+                  className="w-10 h-10 rounded-xl bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-800)] text-white flex items-center justify-center hover:shadow-[0_0_15px_rgba(79,107,255,0.2)] transition-all disabled:opacity-30"
                 >
                   <FiSend size={16} />
                 </button>
               </div>
+              {errorMessage && lastFailedMessage && (
+                <div className="mt-2 flex items-center justify-between gap-2 text-xs text-[var(--color-text-muted)]">
+                  <span>{errorMessage}</span>
+                  <button
+                    onClick={() => sendMessage(lastFailedMessage)}
+                    className="text-[var(--color-accent-light)] hover:underline"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

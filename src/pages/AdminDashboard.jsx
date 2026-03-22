@@ -11,7 +11,7 @@ import {
   FiGlobe, FiClock,
 } from 'react-icons/fi';
 
-const COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#818cf8'];
+const COLORS = ['#4F6BFF', '#3A47FF', '#597DFF', '#81C4FF', '#6DA0FF'];
 
 function StatCard({ icon: Icon, label, value, color = 'accent' }) {
   return (
@@ -226,14 +226,14 @@ export default function AdminDashboard({ token, onLogout }) {
                     <Area
                       type="monotone"
                       dataKey="visits"
-                      stroke="#6366f1"
+                      stroke="#4F6BFF"
                       fill="url(#colorVisits)"
                       strokeWidth={2}
                     />
                     <defs>
                       <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#4F6BFF" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#4F6BFF" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                   </AreaChart>

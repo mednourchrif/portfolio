@@ -5,7 +5,7 @@ A premium personal portfolio with AI chat, WebGL visuals, admin analytics, and m
 ## Stack
 
 **Frontend:** React + Vite, Tailwind CSS v4, Framer Motion, Three.js, Recharts, i18next  
-**Backend:** Vercel Serverless Functions, MongoDB, Resend, OpenAI/Claude  
+**Backend:** Vercel Serverless Functions, MongoDB, Resend, OpenAI/Claude/Llama  
 **Auth:** JWT + bcrypt
 
 ## Setup
@@ -25,7 +25,9 @@ cp .env.example .env
 Fill in your `.env`:
 - `MONGODB_URI` — MongoDB connection string (free at [MongoDB Atlas](https://cloud.mongodb.com))
 - `RESEND_API_KEY` — From [Resend](https://resend.com)
-- `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` — For AI chatbot
+- `AI_PROVIDER` (`openai` | `anthropic` | `llama`) — Optional explicit provider selection
+- `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` or `LLAMA_API_KEY` — For AI chatbot
+- If using Llama via OpenRouter/Groq, also set `LLAMA_BASE_URL` and `LLAMA_MODEL`
 - `JWT_SECRET` — Random string (64+ chars)
 - `ADMIN_PASSWORD_HASH` — Generate with:
   ```bash
