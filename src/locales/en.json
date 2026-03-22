@@ -4,7 +4,9 @@
     "skills": "Skills",
     "projects": "Projects",
     "github": "GitHub",
-    "contact": "Contact"
+    "contact": "Contact",
+    "performance_cinematic": "Cinematic",
+    "performance_smooth": "Smooth"
   },
   "hero": {
     "headline": "Building Intelligent Digital Systems",

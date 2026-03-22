@@ -1,7 +1,9 @@
 import { useState, Suspense, lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import IntroAnimation from './components/IntroAnimation';
 import Home from './pages/Home';
+import { usePerformanceMode } from './context/PerformanceModeContext';
 
 const Admin = lazy(() => import('./pages/Admin'));
 const WebGLBackground = lazy(() => import('./components/WebGLBackground'));
@@ -39,9 +41,10 @@ function VisitorTracker() {
 
 export default function App() {
   const [introComplete, setIntroComplete] = useState(false);
+  const { isSmooth } = usePerformanceMode();
 
   return (
-    <>
+    <MotionConfig reducedMotion={isSmooth ? 'always' : 'user'}>
       <Suspense fallback={<div className="fixed inset-0 -z-10 bg-[var(--color-bg)]" />}>
         <WebGLBackground />
       </Suspense>
@@ -65,6 +68,6 @@ export default function App() {
           </Routes>
         </Suspense>
       )}
-    </>
+    </MotionConfig>
   );
 }

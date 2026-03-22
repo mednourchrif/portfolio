@@ -195,4 +195,21 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
+
+  html[data-performance-mode='smooth'] .noise-overlay::before {
+    display: none;
+  }
+
+  html[data-performance-mode='smooth'] .glass,
+  html[data-performance-mode='smooth'] .glass-strong,
+  html[data-performance-mode='smooth'] .glass-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  html[data-performance-mode='smooth'] .glow-accent,
+  html[data-performance-mode='smooth'] .glow-violet,
+  html[data-performance-mode='smooth'] .glow-electric {
+    box-shadow: none;
+  }
 }

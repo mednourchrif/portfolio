@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { HiMenu, HiX } from 'react-icons/hi';
 import LanguageSwitcher from './LanguageSwitcher';
+import PerformanceModeToggle from './PerformanceModeToggle';
 
 const navLinks = [
   { key: 'about', href: '/#about' },
@@ -105,6 +106,9 @@ export default function Navbar() {
               )}
             </button>
           ))}
+          <div className="ml-3">
+            <PerformanceModeToggle compact />
+          </div>
           <div className="ml-4 pl-4 border-l border-[var(--color-border)]">
             <LanguageSwitcher />
           </div>
@@ -149,6 +153,9 @@ export default function Navbar() {
                   {t(`nav.${link.key}`)}
                 </motion.button>
               ))}
+              <div className="pt-3 mt-2 border-t border-[var(--color-border)]">
+                <PerformanceModeToggle />
+              </div>
               <div className="pt-3 mt-2 border-t border-[var(--color-border)]">
                 <LanguageSwitcher />
               </div>

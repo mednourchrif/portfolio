@@ -2,11 +2,13 @@ import { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FiArrowDown, FiMail } from 'react-icons/fi';
+import { usePerformanceMode } from '../../context/PerformanceModeContext';
 
 const HeroGeometry = lazy(() => import('../HeroGeometry'));
 
 export default function Hero() {
   const { t } = useTranslation();
+  const { isSmooth } = usePerformanceMode();
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -90,15 +92,19 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.35, ease: [0.215, 0.61, 0.355, 1] }}
           className="hidden lg:block"
         >
-          <Suspense
-            fallback={
-              <div className="w-full h-[400px] flex items-center justify-center">
-                <div className="w-16 h-16 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
-              </div>
-            }
-          >
-            <HeroGeometry />
-          </Suspense>
+          {isSmooth ? (
+            <div className="w-full h-[400px] rounded-3xl border border-[var(--color-border)] bg-[radial-gradient(ellipse_at_center,rgba(79,107,255,0.22)_0%,rgba(79,107,255,0.06)_45%,transparent_72%)]" />
+          ) : (
+            <Suspense
+              fallback={
+                <div className="w-full h-[400px] flex items-center justify-center">
+                  <div className="w-16 h-16 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin" />
+                </div>
+              }
+            >
+              <HeroGeometry />
+            </Suspense>
+          )}
         </motion.div>
       </div>
 

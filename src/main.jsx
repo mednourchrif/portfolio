@@ -5,12 +5,15 @@ import App from './App';
 import './i18n';
 import './index.css';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { PerformanceModeProvider } from './context/PerformanceModeContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <SpeedInsights />
-      <App />
-    </BrowserRouter>
+    <PerformanceModeProvider>
+      <BrowserRouter>
+        <SpeedInsights />
+        <App />
+      </BrowserRouter>
+    </PerformanceModeProvider>
   </React.StrictMode>
 );

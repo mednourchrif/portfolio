@@ -4,7 +4,9 @@
     "skills": "Compétences",
     "projects": "Projets",
     "github": "GitHub",
-    "contact": "Contact"
+    "contact": "Contact",
+    "performance_cinematic": "Cinématique",
+    "performance_smooth": "Fluide"
   },
   "hero": {
     "headline": "Construire des Systèmes Numériques Intelligents",

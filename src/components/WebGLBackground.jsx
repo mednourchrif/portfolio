@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { usePerformanceMode } from '../context/PerformanceModeContext';
 
 const vertexShader = `
   varying vec2 vUv;
@@ -197,16 +198,20 @@ function GradientMesh() {
 
 export default function WebGLBackground() {
   const [webglEnabled, setWebglEnabled] = useState(true);
+  const { isSmooth } = usePerformanceMode();
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     const lowMemory = typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
     const lowCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
 
-    if (prefersReducedMotion || lowMemory || lowCpu) {
+    if (isSmooth || prefersReducedMotion || lowMemory || lowCpu) {
       setWebglEnabled(false);
+      return;
     }
-  }, []);
+
+    setWebglEnabled(true);
+  }, [isSmooth]);
 
   if (!webglEnabled) {
     return (
