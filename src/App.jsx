@@ -1,5 +1,7 @@
 import { useState, Suspense, lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 import IntroAnimation from './components/IntroAnimation';
 import Home from './pages/Home';
 
@@ -46,6 +48,8 @@ export default function App() {
         <WebGLBackground />
       </Suspense>
       <VisitorTracker />
+      <SpeedInsights />
+      <Analytics />
 
       {!introComplete && (
         <IntroAnimation onComplete={() => setIntroComplete(true)} />
