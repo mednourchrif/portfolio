@@ -49,8 +49,6 @@ export default function App() {
         <WebGLBackground />
       </Suspense>
       <VisitorTracker />
-      <SpeedInsights />
-      <Analytics />
 
       {!introComplete && (
         <IntroAnimation onComplete={() => setIntroComplete(true)} />
