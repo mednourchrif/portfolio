@@ -31,8 +31,8 @@ const projectsData = [
     tags: ['React', 'Three.js', 'Tailwind CSS', 'OpenAI', 'MongoDB'],
     category: 'fullstack',
     github: 'https://github.com/mednourchrif',
-    demo: null,
-    image: null,
+    demo: "https://nourcherif.me",
+    image: '/projects/portfolio.png',
   },
   {
     title: 'Tech-Web-Symfony',
